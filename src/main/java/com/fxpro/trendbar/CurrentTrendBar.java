@@ -13,8 +13,6 @@ public class CurrentTrendBar implements TrendBar {
     private final Deque<Quote> quoteSet = new ConcurrentLinkedDeque<>();
 
     @Getter
-    private final long openPrice;
-    @Getter
     private final LocalDateTime timeStamp;
     private final TrendBarType trendBarType;
     private final Symbol symbol;
@@ -27,7 +25,6 @@ public class CurrentTrendBar implements TrendBar {
         this.timeStamp = LocalDateTime.now();
         this.trendBarType = m1;
         this.symbol = quote.getSymbol();
-        this.openPrice = quote.getPrice();
         quoteSet.add(quote);
     }
 
@@ -36,6 +33,9 @@ public class CurrentTrendBar implements TrendBar {
     }
 
 
+    public long getOpenPrice() {
+        return quoteSet.getFirst().getPrice();
+    }
     public long getClosePrice() {
         return quoteSet.getLast().getPrice();
     }

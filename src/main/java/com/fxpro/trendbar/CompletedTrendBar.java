@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.ToString;
 
 @Getter
-@ToString(of = {"openPrice", "closePrice", "quotesCount"})
 public class CompletedTrendBar implements TrendBar {
 
     private final TrendBarType trendBarType;
@@ -36,5 +35,17 @@ public class CompletedTrendBar implements TrendBar {
     @Override
     public Symbol getTrendBarSymbol() {
         return symbol;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("CompletedTrendBar{");
+        sb.append("closePrice=").append(closePrice);
+        sb.append(", lowPrice=").append(lowPrice);
+        sb.append(", openPrice=").append(openPrice);
+        sb.append(", quotesCount=").append(quotesCount);
+        sb.append(", hashCode=").append(Integer.toHexString(hashCode()));
+        sb.append('}');
+        return sb.toString();
     }
 }

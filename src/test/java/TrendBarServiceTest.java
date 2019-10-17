@@ -1,7 +1,4 @@
-import com.fxpro.trendbar.Quote;
-import com.fxpro.trendbar.QuoteProvider;
-import com.fxpro.trendbar.TrendBarService;
-import com.fxpro.trendbar.TrendBarServiceImpl;
+import com.fxpro.trendbar.*;
 import org.junit.Test;
 
 import java.util.Random;
@@ -22,7 +19,7 @@ public class TrendBarServiceTest {
                     Quote q = quoteProvider.getQuote();
                     trendBarService.addQuote(q);
                     try {
-                        Thread.sleep(random.nextInt(1000));
+                        Thread.sleep(random.nextInt(100));
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -35,7 +32,9 @@ public class TrendBarServiceTest {
         trendBarService.getCountDownLatch().await();
 
         trendBarService.getStorage().printAll();
+        CurrentTrendBar last = trendBarService.getCurrentTrendBar();
 
+        System.out.println("Last: closePrice=" + last.getClosePrice() + ", openPrice= " + last.getOpenPrice() + ", quotesCount=" + last.getQuoteSet().size());
         System.out.println(1);
     }
 }

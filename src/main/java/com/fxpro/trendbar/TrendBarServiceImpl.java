@@ -4,14 +4,15 @@ import lombok.Getter;
 
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TrendBarServiceImpl implements TrendBarService {
 
-    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10);
-
+    private final ExecutorService executorService = Executors.newFixedThreadPool(2);
+    @Getter
     private volatile CurrentTrendBar currentTrendBar;
     @Getter
     private final CompletedTrendBarStorage storage = new CompletedTrendBarStorage();
@@ -45,41 +46,34 @@ public class TrendBarServiceImpl implements TrendBarService {
             try {
                 System.out.println("Start processing quote: " + quote.getPrice() + " " + quote.getTimeStamp().getSecond());
                 if (currentTrendBar == null)
-                    try {
-                        lock.lock();
-//                    synchronized (this)
-
-                        if (currentTrendBar == null)
-                            currentTrendBar = new CurrentTrendBar(TrendBarType.M1, quote);
-                    } finally {
-                        lock.unlock();
+                    synchronized (TrendBarServiceImpl.this) {
+                        if (currentTrendBar == null) {
+                            System.out.println(1);
+                            currentTrendBar = new CurrentTrendBar(TrendBarType.M1, quote);}
+                        else {
+                            currentTrendBar.addQuote(quote);
+                            System.out.println(2);
+                        }
                     }
                 else if (quote.getTimeStamp().getSecond() > currentTrendBar.getLastQuote().getTimeStamp().getSecond()) {
-                    boolean res = false;
-
-                    try {
-                        if ((res = lock.tryLock())) {
-//                    synchronized (this)
-//                        if ( quote.getTimeStamp().getSecond() > currentTrendBar.getLastQuote().getTimeStamp().getSecond()) {
+                    CurrentTrendBar old = currentTrendBar;
+                    synchronized (TrendBarServiceImpl.this) {
+                        if (old == currentTrendBar) {
                             storage.add(new CompletedTrendBar(currentTrendBar));
                             currentTrendBar = new CurrentTrendBar(TrendBarType.M1, quote);
-//                        } else {
-
                         } else
                             currentTrendBar.addQuote(quote);
-                    } finally {
-                        if (res)
-                            lock.unlock();
                     }
-
-
                 } else
                     currentTrendBar.addQuote(quote);
+
             } catch (RuntimeException e) {
                 System.out.println("error" + e.getMessage());
                 e.printStackTrace();
             } finally {
                 countDownLatch.countDown();
+                System.out.println("End processing quote: " + quote.getPrice() + " " + quote.getTimeStamp().getSecond());
+
             }
 
         }

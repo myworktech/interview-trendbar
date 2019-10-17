@@ -17,6 +17,6 @@ public class CompletedTrendBarStorage {
     }
 
     public void printAll() {
-        System.out.println(Arrays.toString(list.toArray()));
+        System.out.println(Arrays.toString(list.toArray()).replaceAll("\\},", "),\n"));
     }
 }
