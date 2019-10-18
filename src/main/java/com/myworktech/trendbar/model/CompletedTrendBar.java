@@ -1,9 +1,9 @@
-package com.fxpro.trendbar;
+package com.myworktech.trendbar.model;
 
 import lombok.Getter;
 
 @Getter
-public class CompletedTrendBar implements TrendBar {
+public class CompletedTrendBar {
 
     private final TrendBarType trendBarType;
     private final Symbol symbol;
@@ -26,12 +26,10 @@ public class CompletedTrendBar implements TrendBar {
     }
 
 
-    @Override
     public TrendBarType getType() {
         return trendBarType;
     }
 
-    @Override
     public Symbol getTrendBarSymbol() {
         return symbol;
     }

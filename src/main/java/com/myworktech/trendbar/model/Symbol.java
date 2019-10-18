@@ -1,4 +1,4 @@
-package com.fxpro.trendbar;
+package com.myworktech.trendbar.model;
 
 import lombok.Getter;
 

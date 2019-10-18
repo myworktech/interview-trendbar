@@ -1,6 +1,6 @@
-import com.fxpro.trendbar.Quote;
-import com.fxpro.trendbar.QuoteProvider;
-import com.fxpro.trendbar.Symbol;
+import com.myworktech.trendbar.model.Quote;
+import com.myworktech.trendbar.model.Symbol;
+import com.myworktech.trendbar.service.QuoteProvider;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicReference;

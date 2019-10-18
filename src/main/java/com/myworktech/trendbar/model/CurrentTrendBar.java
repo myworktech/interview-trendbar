@@ -1,13 +1,14 @@
-package com.fxpro.trendbar;
+package com.myworktech.trendbar.model;
 
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class CurrentTrendBar implements TrendBar {
+public class CurrentTrendBar {
 
     @Getter
     private final Deque<Quote> quoteSet = new ConcurrentLinkedDeque<>();
@@ -17,9 +18,9 @@ public class CurrentTrendBar implements TrendBar {
     private final TrendBarType trendBarType;
     private final Symbol symbol;
 
-    public CurrentTrendBar(TrendBarType m1, Quote quote) {
+    public CurrentTrendBar(TrendBarType trendBarType, Quote quote) {
         this.timeStamp = LocalDateTime.now();
-        this.trendBarType = m1;
+        this.trendBarType = trendBarType;
         this.symbol = quote.getSymbol();
         quoteSet.add(quote);
     }
@@ -33,8 +34,10 @@ public class CurrentTrendBar implements TrendBar {
     }
 
     public long getOpenPrice() {
-        return quoteSet.stream().min(Comparator.comparing(Quote::getTimeStamp)).get().getPrice();
+        Optional<Quote> quoteOptional = quoteSet.stream().min(Comparator.comparing(Quote::getTimeStamp));
+        return quoteOptional.map(Quote::getPrice).orElse(0L);
     }
+
     public long getClosePrice() {
         return quoteSet.stream().max(Comparator.comparing(Quote::getTimeStamp)).get().getPrice();
     }
@@ -47,12 +50,10 @@ public class CurrentTrendBar implements TrendBar {
         return quoteSet.stream().max(Comparator.comparing(Quote::getPrice)).get().getPrice();
     }
 
-    @Override
     public TrendBarType getType() {
         return trendBarType;
     }
 
-    @Override
     public Symbol getTrendBarSymbol() {
         return symbol;
     }
