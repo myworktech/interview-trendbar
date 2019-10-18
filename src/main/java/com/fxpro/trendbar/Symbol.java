@@ -50,9 +50,11 @@ public class Symbol {
 
         Symbol newSymbol = new Symbol(firstCurrency, secondCurrency);
 
-        return instances.putIfAbsent(pair, newSymbol);
+        Symbol instance = instances.putIfAbsent(pair, newSymbol);
+        return instance == null ? newSymbol : instance;
     }
 
+    @SuppressWarnings("unchecked")
     public static Set<Symbol> getAvailableSymbols() {
         return (Set<Symbol>) new HashSet<>(instances.values()).clone();
     }

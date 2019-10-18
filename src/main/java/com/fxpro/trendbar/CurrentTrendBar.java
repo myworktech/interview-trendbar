@@ -17,10 +17,6 @@ public class CurrentTrendBar implements TrendBar {
     private final TrendBarType trendBarType;
     private final Symbol symbol;
 
-    public Quote getLastQuote() {
-        return quoteSet.getLast();
-    }
-
     public CurrentTrendBar(TrendBarType m1, Quote quote) {
         this.timeStamp = LocalDateTime.now();
         this.trendBarType = m1;
@@ -28,27 +24,28 @@ public class CurrentTrendBar implements TrendBar {
         quoteSet.add(quote);
     }
 
+    public Quote getLastQuote() {
+        return quoteSet.getLast();
+    }
+
     public void addQuote(Quote quote) {
         quoteSet.add(quote);
     }
 
-
     public long getOpenPrice() {
-        return quoteSet.getFirst().getPrice();
+        return quoteSet.stream().min(Comparator.comparing(Quote::getTimeStamp)).get().getPrice();
     }
     public long getClosePrice() {
-        return quoteSet.getLast().getPrice();
-    }
-
-
-    public long getHighPrice() {
         return quoteSet.stream().max(Comparator.comparing(Quote::getTimeStamp)).get().getPrice();
     }
 
     public long getLowPrice() {
-        return quoteSet.stream().min(Comparator.comparing(Quote::getTimeStamp)).get().getPrice();
+        return quoteSet.stream().min(Comparator.comparing(Quote::getPrice)).get().getPrice();
     }
 
+    public long getHighPrice() {
+        return quoteSet.stream().max(Comparator.comparing(Quote::getPrice)).get().getPrice();
+    }
 
     @Override
     public TrendBarType getType() {

@@ -1,7 +1,10 @@
 import com.fxpro.trendbar.*;
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class TrendBarServiceTest {
 
@@ -13,13 +16,13 @@ public class TrendBarServiceTest {
 
     @Test
     public void test1() throws Throwable {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 50; i++) {
             Thread thread = new Thread(() -> {
-                for (int j = 0; j < 40; j++) {
+                for (int j = 0; j < 4; j++) {
                     Quote q = quoteProvider.getQuote();
                     trendBarService.addQuote(q);
                     try {
-                        Thread.sleep(random.nextInt(100));
+                        Thread.sleep(random.nextInt(1000));
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -31,10 +34,13 @@ public class TrendBarServiceTest {
         }
         trendBarService.getCountDownLatch().await();
 
-        trendBarService.getStorage().printAll();
+        CompletedTrendBar[] l = trendBarService.getStorage().getAll();
+
+        System.out.println(Arrays.toString(l).replaceAll("},", "),\n"));
         CurrentTrendBar last = trendBarService.getCurrentTrendBar();
 
         System.out.println("Last: closePrice=" + last.getClosePrice() + ", openPrice= " + last.getOpenPrice() + ", quotesCount=" + last.getQuoteSet().size());
-        System.out.println(1);
+        Assert.assertEquals(200, Stream.of(l).map(CompletedTrendBar::getQuotesCount).reduce(0, Integer::sum) + last.getQuoteSet().size());
+
     }
 }

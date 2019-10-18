@@ -6,12 +6,10 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class TrendBarServiceImpl implements TrendBarService {
 
-    private final ExecutorService executorService = Executors.newFixedThreadPool(2);
+    private final ExecutorService executorService = Executors.newScheduledThreadPool(10);
     @Getter
     private volatile CurrentTrendBar currentTrendBar;
     @Getter
@@ -19,12 +17,9 @@ public class TrendBarServiceImpl implements TrendBarService {
     @Getter
     private final CountDownLatch countDownLatch = new CountDownLatch(200);
 
-    private final ReentrantLock lock = new ReentrantLock();
-
-
     @Override
     public void addQuote(Quote quote) {
-        executorService.submit(new R(quote));
+        executorService.submit(new QuoteHandler(quote));
     }
 
     @Override
@@ -33,13 +28,14 @@ public class TrendBarServiceImpl implements TrendBarService {
     }
 
 
-    private class R implements Runnable {
+    private class QuoteHandler implements Runnable {
 
         private final Quote quote;
 
-        public R(Quote quote) {
+        public QuoteHandler(Quote quote) {
             this.quote = quote;
         }
+
 
         @Override
         public void run() {
@@ -48,11 +44,9 @@ public class TrendBarServiceImpl implements TrendBarService {
                 if (currentTrendBar == null)
                     synchronized (TrendBarServiceImpl.this) {
                         if (currentTrendBar == null) {
-                            System.out.println(1);
-                            currentTrendBar = new CurrentTrendBar(TrendBarType.M1, quote);}
-                        else {
+                            currentTrendBar = new CurrentTrendBar(TrendBarType.M1, quote);
+                        } else {
                             currentTrendBar.addQuote(quote);
-                            System.out.println(2);
                         }
                     }
                 else if (quote.getTimeStamp().getSecond() > currentTrendBar.getLastQuote().getTimeStamp().getSecond()) {
@@ -66,18 +60,12 @@ public class TrendBarServiceImpl implements TrendBarService {
                     }
                 } else
                     currentTrendBar.addQuote(quote);
-
             } catch (RuntimeException e) {
-                System.out.println("error" + e.getMessage());
+                System.out.println("Error handling quote" + e.getMessage());
                 e.printStackTrace();
             } finally {
                 countDownLatch.countDown();
-                System.out.println("End processing quote: " + quote.getPrice() + " " + quote.getTimeStamp().getSecond());
-
             }
-
         }
-
-
     }
 }

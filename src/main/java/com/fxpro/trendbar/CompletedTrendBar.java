@@ -1,7 +1,6 @@
 package com.fxpro.trendbar;
 
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
 public class CompletedTrendBar implements TrendBar {
