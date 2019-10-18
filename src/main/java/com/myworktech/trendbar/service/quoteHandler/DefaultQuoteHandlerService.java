@@ -45,6 +45,11 @@ public class DefaultQuoteHandlerService implements QuoteHandlerService {
             storage.add(new CompletedTrendBar(currentTrendBar));
     }
 
+    private boolean checkIfPeriodIsOver(Quote quote1, Quote quote2) {
+        ChronoField chronoField = trendBarType.getChronoField();
+        return quote1.getTimeStamp().get(chronoField) != quote2.getTimeStamp().get(chronoField);
+    }
+
     private class QuoteHandler implements Runnable {
 
         private final Quote quote;
@@ -85,11 +90,6 @@ public class DefaultQuoteHandlerService implements QuoteHandlerService {
                 callback.finishProcessingQuote();
             }
         }
-    }
-
-    private boolean checkIfPeriodIsOver(Quote quote1, Quote quote2) {
-        ChronoField chronoField = trendBarType.getChronoField();
-        return quote1.getTimeStamp().get(chronoField) != quote2.getTimeStamp().get(chronoField);
     }
 
 }

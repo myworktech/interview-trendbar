@@ -27,20 +27,15 @@ public class TrendBarServiceTest {
     private static final int THREAD_COUNT = 50;
     private static final int CYCLE_COUNT_PER_THREAD = 40;
     private static final int TOTAL_CYCLE_COUNT = THREAD_COUNT * CYCLE_COUNT_PER_THREAD;
-
+    private final Random random = new Random();
     @Autowired
     private TrendBarService trendBarService;
-
     @Autowired
     private StorageFacade storageFacade;
-
     @Autowired
     private List<QuoteProvider> quoteProviderList;
-
     @Autowired
     private List<QuoteHandlerType> quoteHandlerTypeList;
-
-    private final Random random = new Random();
 
     @Test
     public void test1() throws Throwable {
@@ -50,9 +45,9 @@ public class TrendBarServiceTest {
         for (int i = 0; i < THREAD_COUNT; i++) {
             Thread thread = new Thread(() -> {
                 for (int j = 0; j < CYCLE_COUNT_PER_THREAD; j++) {
-                    for (int k = 0; k < quoteProviderList.size(); k++) {
+                    for (QuoteProvider quoteProvider : quoteProviderList) {
 
-                        Quote q = quoteProviderList.get(k).getQuote();
+                        Quote q = quoteProvider.getQuote();
 
                         trendBarService.addQuote(q, countDownLatch::countDown);
                         try {
