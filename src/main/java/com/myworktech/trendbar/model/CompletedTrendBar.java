@@ -37,9 +37,8 @@ public class CompletedTrendBar {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("CompletedTrendBar{");
-        sb.append("closePrice=").append(closePrice);
         sb.append(", lowPrice=").append(lowPrice);
-        sb.append(", openPrice=").append(openPrice);
+        sb.append(", highPrice=").append(highPrice);
         sb.append(", quotesCount=").append(quotesCount);
         sb.append(", hashCode=").append(Integer.toHexString(hashCode()));
         sb.append('}');

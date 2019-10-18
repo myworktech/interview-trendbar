@@ -7,16 +7,20 @@ import com.myworktech.trendbar.service.QuoteProvider;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class TestQuoteProvider1 implements QuoteProvider {
+public class DemoQuoteProvider implements QuoteProvider {
+
+    private final Symbol symbol;
+
+    public DemoQuoteProvider(Symbol symbol) {
+        this.symbol = symbol;
+    }
 
     @Override
     public Quote getQuote() {
-        return new Quote(nextSymbol(), nextPrice(), LocalDateTime.now());
-//        return new Quote(Symbol.getInstance("USDRUB"), nextPrice(), LocalDateTime.now());
+        return new Quote(symbol, nextPrice(), LocalDateTime.now());
     }
 
     private AtomicReference<Long> priceCounter = new AtomicReference<>(null);
-    private AtomicReference<Integer> symbolCounter = new AtomicReference<>(null);
 
     public Long nextPrice() {
         Long oldValue;
@@ -28,13 +32,5 @@ public class TestQuoteProvider1 implements QuoteProvider {
         return newValue;
     }
 
-    public Symbol nextSymbol() {
-        Integer oldValue;
-        Integer newValue;
-        do {
-            oldValue = symbolCounter.get();
-            newValue = oldValue == null ? 1 : oldValue * (-1);
-        } while (!symbolCounter.compareAndSet(oldValue, newValue));
-        return newValue > 0 ? Symbol.getInstance("USDEUR") : Symbol.getInstance("USDRUB");
-    }
+
 }
