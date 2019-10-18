@@ -9,7 +9,7 @@
 
     <context:annotation-config/>
 
-    <context:component-scan base-package="com.myworktech"/>
+    <context:component-scan base-package="com.myworktech.trendbar"/>
 
 
 </beans>

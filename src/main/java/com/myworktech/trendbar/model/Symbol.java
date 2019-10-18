@@ -24,18 +24,12 @@ public class Symbol {
 
     @Getter
     private final Currency first;
-
     @Getter
     private final Currency second;
 
     private Symbol(Currency first, Currency second) {
         this.first = first;
         this.second = second;
-    }
-
-    @Override
-    public String toString() {
-        return first.getCurrencyCode() + second.getCurrencyCode();
     }
 
     public static Symbol getInstance(String pair) {
@@ -59,10 +53,8 @@ public class Symbol {
         return instance == null ? newSymbol : instance;
     }
 
-    @SuppressWarnings("unchecked")
-    public static Set<Symbol> getAvailableSymbols() {
-        return (Set<Symbol>) new HashSet<>(instances.values()).clone();
+    @Override
+    public String toString() {
+        return first.getCurrencyCode() + second.getCurrencyCode();
     }
-
-
 }

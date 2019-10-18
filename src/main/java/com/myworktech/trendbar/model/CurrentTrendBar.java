@@ -57,6 +57,4 @@ public class CurrentTrendBar {
     public Symbol getTrendBarSymbol() {
         return symbol;
     }
-
-
 }
