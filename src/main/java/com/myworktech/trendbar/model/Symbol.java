@@ -3,8 +3,6 @@ package com.myworktech.trendbar.model;
 import lombok.Getter;
 
 import java.util.Currency;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 

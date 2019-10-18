@@ -9,11 +9,11 @@ public class CustomNameThreadFactory implements ThreadFactory {
     private final AtomicInteger threadNumber = new AtomicInteger(1);
     private final String namePrefix;
 
-    public CustomNameThreadFactory(String poolName) {
+    CustomNameThreadFactory(String poolName) {
         SecurityManager s = System.getSecurityManager();
         group = (s != null) ? s.getThreadGroup() :
                 Thread.currentThread().getThreadGroup();
-        namePrefix = poolName +"-" +
+        namePrefix = poolName + "-" +
                 poolNumber.getAndIncrement() +
                 "-thread-";
     }

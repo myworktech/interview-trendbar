@@ -16,6 +16,7 @@ public class HandlersConfiguration {
 
     /**
      * Surely, we can inject these values from external text- or xml- based config.
+     *
      * @return list of available trend bar types and symbols.
      */
     @Bean(name = "quoteHandlerTypeList")
