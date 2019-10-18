@@ -1,28 +1,35 @@
+import com.myworktech.trendbar.model.CompletedTrendBar;
 import com.myworktech.trendbar.model.Quote;
-import com.myworktech.trendbar.service.QuoteHandlerService;
+import com.myworktech.trendbar.service.CompletedTrendBarStorage;
 import com.myworktech.trendbar.service.TrendBarService;
+import lombok.extern.log4j.Log4j;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.Stream;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:spring/applicationContext.xml")
+@Log4j
 public class TrendBarServiceTest {
-
     @Autowired
     private TrendBarService trendBarService;
+    @Autowired
+    private CompletedTrendBarStorage storage;
 
     private final CountDownLatch countDownLatch = new CountDownLatch(200);
 
-
     private TestQuoteProvider quoteProvider = new TestQuoteProvider();
 
-    private Random random = new Random();
+    private final Random random = new Random();
+
 
     @Test
     public void test1() throws Throwable {
@@ -43,14 +50,14 @@ public class TrendBarServiceTest {
 
         }
         countDownLatch.await();
+        trendBarService.shutdownService();
 
-//        CompletedTrendBar[] l = trendBarService.getStorage().getAll();
+        CompletedTrendBar[] l = storage.getAll();
 
-//        System.out.println(Arrays.toString(l).replaceAll("},", "),\n"));
-//        CurrentTrendBar last = trendBarService.getCurrentTrendBar();
+        log.info(Arrays.toString(l).replaceAll("},", "),\n"));
 
-//        System.out.println("Last: closePrice=" + last.getClosePrice() + ", openPrice= " + last.getOpenPrice() + ", quotesCount=" + last.getQuoteSet().size());
-//        Assert.assertEquals(200, Stream.of(l).map(CompletedTrendBar::getQuotesCount).reduce(0, Integer::sum) + last.getQuoteSet().size());
+
+        Assert.assertEquals(200, (int) Stream.of(l).map(CompletedTrendBar::getQuotesCount).reduce(0, Integer::sum));
 
     }
 }

@@ -8,5 +8,6 @@ import java.util.Set;
 
 public interface TrendBarService {
     void addQuote(Quote quote, Callback callback);
+    void shutdownService() throws InterruptedException;
     Set<CompletedTrendBar> buildTrendBarsHistory(Symbol symbol);
 }

@@ -25,6 +25,11 @@ public class DefaultTrendBarService implements TrendBarService {
     }
 
     @Override
+    public void shutdownService() throws InterruptedException {
+        quoteHandlerService.shutdownService();
+    }
+
+    @Override
     public Set<CompletedTrendBar> buildTrendBarsHistory(Symbol symbol) {
         return null;
     }

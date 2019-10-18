@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Log4j
@@ -19,20 +20,24 @@ public class QuoteHandlerService {
     private final ExecutorService executorService;
     private final CompletedTrendBarStorage storage;
 
-
     @Getter
     private volatile CurrentTrendBar currentTrendBar;
-
 
     @Autowired
     public QuoteHandlerService(CompletedTrendBarStorage storage) {
         this.storage = storage;
-        this.executorService = Executors.newScheduledThreadPool(10);
-
+        this.executorService = Executors.newCachedThreadPool();
     }
 
     public void handle(Quote quote, Callback callback) {
+        log.info("Submitting quote: " + quote);
         executorService.submit(new QuoteHandler(quote, callback));
+    }
+
+    public void shutdownService() throws InterruptedException {
+        executorService.shutdown();
+        executorService.awaitTermination(1, TimeUnit.MILLISECONDS);
+        storage.add(new CompletedTrendBar(currentTrendBar));
     }
 
     private class QuoteHandler implements Runnable {
@@ -72,7 +77,7 @@ public class QuoteHandlerService {
                 log.error("Error handling quote" + e.getMessage(), e);
             } finally {
                 log.debug("Finish processing quote: " + quote);
-                callback.action();
+                callback.finishProcessingQuote();
             }
         }
     }

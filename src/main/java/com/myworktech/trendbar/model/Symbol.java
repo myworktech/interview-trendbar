@@ -33,6 +33,11 @@ public class Symbol {
         this.second = second;
     }
 
+    @Override
+    public String toString() {
+        return first.getCurrencyCode() + second.getCurrencyCode();
+    }
+
     public static Symbol getInstance(String pair) {
         Symbol symbol = instances.get(pair);
         if (symbol != null)
