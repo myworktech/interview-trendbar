@@ -1,4 +1,4 @@
-package com.myworktech.trendbar;
+package com.myworktech.trendbar.demo;
 
 import com.myworktech.trendbar.model.QuoteHandlerType;
 import com.myworktech.trendbar.model.Symbol;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Configuration
-@Profile("unitTest")
+@Profile("demoTest")
 public class DemoTestHandlersConfiguration {
 
     @Bean(name = "quoteHandlerTypeList")
@@ -42,5 +42,4 @@ public class DemoTestHandlersConfiguration {
                 .map(DemoQuoteProvider::new)
                 .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
     }
-
 }

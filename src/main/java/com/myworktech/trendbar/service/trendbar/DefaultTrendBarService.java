@@ -1,9 +1,7 @@
 package com.myworktech.trendbar.service.trendbar;
 
-import com.myworktech.trendbar.model.CompletedTrendBar;
 import com.myworktech.trendbar.model.Quote;
 import com.myworktech.trendbar.model.QuoteHandlerType;
-import com.myworktech.trendbar.model.Symbol;
 import com.myworktech.trendbar.service.Callback;
 import com.myworktech.trendbar.service.quoteHandler.QuoteHandlerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.Set;
 
 @Service
 public class DefaultTrendBarService implements TrendBarService {
@@ -36,10 +33,5 @@ public class DefaultTrendBarService implements TrendBarService {
         for (QuoteHandlerService quoteHandlerService : handlers.values()) {
             quoteHandlerService.shutdownService();
         }
-    }
-
-    @Override
-    public Set<CompletedTrendBar> buildTrendBarsHistory(Symbol symbol) {
-        return null;
     }
 }

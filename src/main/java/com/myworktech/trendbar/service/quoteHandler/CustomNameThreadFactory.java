@@ -1,5 +1,7 @@
 package com.myworktech.trendbar.service.quoteHandler;
 
+import com.myworktech.trendbar.model.Symbol;
+
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -9,11 +11,11 @@ public class CustomNameThreadFactory implements ThreadFactory {
     private final AtomicInteger threadNumber = new AtomicInteger(1);
     private final String namePrefix;
 
-    CustomNameThreadFactory(String poolName) {
+    CustomNameThreadFactory(String trendBarType, Symbol symbol) {
         SecurityManager s = System.getSecurityManager();
         group = (s != null) ? s.getThreadGroup() :
                 Thread.currentThread().getThreadGroup();
-        namePrefix = poolName + "-" +
+        namePrefix = trendBarType + "-" + symbol.toString() + "-" +
                 poolNumber.getAndIncrement() +
                 "-thread-";
     }

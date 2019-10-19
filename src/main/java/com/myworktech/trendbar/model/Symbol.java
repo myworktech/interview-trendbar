@@ -21,13 +21,13 @@ public class Symbol {
     }
 
     @Getter
-    private final Currency first;
+    private final Currency baseCurrency;
     @Getter
-    private final Currency second;
+    private final Currency quoteCurrency;
 
-    private Symbol(Currency first, Currency second) {
-        this.first = first;
-        this.second = second;
+    private Symbol(Currency baseCurrency, Currency quoteCurrency) {
+        this.baseCurrency = baseCurrency;
+        this.quoteCurrency = quoteCurrency;
     }
 
     public static Symbol getInstance(String pair) {
@@ -41,11 +41,13 @@ public class Symbol {
         String first = pair.substring(0, 3);
         String second = pair.substring(3, 6);
 
+        if (first.equals(second))
+            throw new IllegalArgumentException("Currencies must be different.");
 
-        Currency firstCurrency = Currency.getInstance(first);
-        Currency secondCurrency = Currency.getInstance(second);
+        Currency baseCurrency = Currency.getInstance(first);
+        Currency quoteCurrency = Currency.getInstance(second);
 
-        Symbol newSymbol = new Symbol(firstCurrency, secondCurrency);
+        Symbol newSymbol = new Symbol(baseCurrency, quoteCurrency);
 
         Symbol instance = instances.putIfAbsent(pair, newSymbol);
         return instance == null ? newSymbol : instance;
@@ -53,6 +55,6 @@ public class Symbol {
 
     @Override
     public String toString() {
-        return first.getCurrencyCode() + second.getCurrencyCode();
+        return baseCurrency.getCurrencyCode() + quoteCurrency.getCurrencyCode();
     }
 }

@@ -5,7 +5,6 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.Deque;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class CurrentTrendBar {
@@ -14,12 +13,12 @@ public class CurrentTrendBar {
     private final Deque<Quote> quoteSet = new ConcurrentLinkedDeque<>();
 
     @Getter
-    private final LocalDateTime timeStamp;
+    private final LocalDateTime createdTimeStamp;
     private final TrendBarType trendBarType;
     private final Symbol symbol;
 
     public CurrentTrendBar(TrendBarType trendBarType, Quote quote) {
-        this.timeStamp = LocalDateTime.now();
+        this.createdTimeStamp = LocalDateTime.now();
         this.trendBarType = trendBarType;
         this.symbol = quote.getSymbol();
         quoteSet.add(quote);
@@ -34,20 +33,19 @@ public class CurrentTrendBar {
     }
 
     public long getOpenPrice() {
-        Optional<Quote> quoteOptional = quoteSet.stream().min(Comparator.comparing(Quote::getTimeStamp));
-        return quoteOptional.map(Quote::getPrice).orElse(0L);
+        return quoteSet.stream().min(Comparator.comparing(Quote::getTimeStamp)).map(Quote::getPrice).orElse(0L);
     }
 
     public long getClosePrice() {
-        return quoteSet.stream().max(Comparator.comparing(Quote::getTimeStamp)).get().getPrice();
+        return quoteSet.stream().max(Comparator.comparing(Quote::getTimeStamp)).map(Quote::getPrice).orElse(0L);
     }
 
     public long getLowPrice() {
-        return quoteSet.stream().min(Comparator.comparing(Quote::getPrice)).get().getPrice();
+        return quoteSet.stream().min(Comparator.comparing(Quote::getPrice)).map(Quote::getPrice).orElse(0L);
     }
 
     public long getHighPrice() {
-        return quoteSet.stream().max(Comparator.comparing(Quote::getPrice)).get().getPrice();
+        return quoteSet.stream().max(Comparator.comparing(Quote::getPrice)).map(Quote::getPrice).orElse(0L);
     }
 
     public TrendBarType getType() {

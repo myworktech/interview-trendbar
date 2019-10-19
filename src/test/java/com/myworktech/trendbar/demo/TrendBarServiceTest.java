@@ -1,9 +1,10 @@
-package com.myworktech.trendbar;
+package com.myworktech.trendbar.demo;
 
-import com.myworktech.trendbar.model.Quote;
-import com.myworktech.trendbar.model.QuoteHandlerType;
+import com.myworktech.trendbar.model.*;
 import com.myworktech.trendbar.service.QuoteProvider;
+import com.myworktech.trendbar.service.storage.NoSuchTrendBarException;
 import com.myworktech.trendbar.service.storage.StorageFacade;
+import com.myworktech.trendbar.service.storage.TrendBarHistoryService;
 import com.myworktech.trendbar.service.trendbar.TrendBarService;
 import lombok.extern.log4j.Log4j;
 import org.junit.Assert;
@@ -14,13 +15,15 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:spring/applicationContext.xml")
-@ActiveProfiles({"unitTest", "default"})
+@ActiveProfiles({"demoTest", "default"})
 @Log4j
 public class TrendBarServiceTest {
     private static final int DELAY_MILLIS = 100;
@@ -36,6 +39,8 @@ public class TrendBarServiceTest {
     private List<QuoteProvider> quoteProviderList;
     @Autowired
     private List<QuoteHandlerType> quoteHandlerTypeList;
+    @Autowired
+    private TrendBarHistoryService trendBarHistoryService;
 
     @Test
     public void test1() throws Throwable {
@@ -63,7 +68,16 @@ public class TrendBarServiceTest {
         countDownLatch.await();
         trendBarService.shutdownService();
 
-        Assert.assertEquals(SUPER_TOTAL_CYCLE_COUNT, storageFacade.getSuperTotal());
-        System.out.println(1);
+        Assert.assertEquals(SUPER_TOTAL_CYCLE_COUNT, storageFacade.getTrendBarCountByAllStorages());
+
+        try {
+            trendBarHistoryService.buildTrendBarsHistory(Symbol.getInstance("AUDUSD"), TrendBarType.M1, LocalDateTime.now());
+        } catch (NoSuchTrendBarException e) {
+            Assert.assertNotNull(e);
+        }
+
+        Set<CompletedTrendBar> historySet = trendBarHistoryService.buildTrendBarsHistory(Symbol.getInstance("USDRUB"), TrendBarType.S1, LocalDateTime.now().minusHours(1L));
+
+        System.out.println(historySet.toString());
     }
 }

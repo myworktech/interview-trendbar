@@ -28,7 +28,7 @@ public class DefaultQuoteHandlerService implements QuoteHandlerService {
         this.storage = storage;
         this.trendBarType = quoteHandlerType.getTrendBarType();
         this.symbol = quoteHandlerType.getSymbol();
-        this.executorService = Executors.newCachedThreadPool(new CustomNameThreadFactory(quoteHandlerType.getTrendBarType().name()));
+        this.executorService = Executors.newCachedThreadPool(new CustomNameThreadFactory(quoteHandlerType.getTrendBarType().name(), quoteHandlerType.getSymbol()));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class DefaultQuoteHandlerService implements QuoteHandlerService {
     public void shutdownService() throws InterruptedException {
         log.info("Shutting down service: " + trendBarType.name() + " " + symbol);
         executorService.shutdown();
-        executorService.awaitTermination(1, TimeUnit.MILLISECONDS);
+        executorService.awaitTermination(1, TimeUnit.SECONDS);
         if (currentTrendBar != null)
             storage.add(new CompletedTrendBar(currentTrendBar));
     }

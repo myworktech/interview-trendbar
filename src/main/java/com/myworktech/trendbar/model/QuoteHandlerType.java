@@ -2,13 +2,10 @@ package com.myworktech.trendbar.model;
 
 
 import lombok.Getter;
-import lombok.ToString;
 
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-@ToString
 public class QuoteHandlerType {
 
     private static final ConcurrentMap<String, QuoteHandlerType> instances = new ConcurrentHashMap<>();
@@ -36,17 +33,9 @@ public class QuoteHandlerType {
         return instance == null ? newValue : instance;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        QuoteHandlerType that = (QuoteHandlerType) o;
-        return Objects.equals(symbol, that.symbol) &&
-                Objects.equals(trendBarType, that.trendBarType);
-    }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(symbol, trendBarType);
+    public String toString() {
+        return symbol + "-" + trendBarType;
     }
 }

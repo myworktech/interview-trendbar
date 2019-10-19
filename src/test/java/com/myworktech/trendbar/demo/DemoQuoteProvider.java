@@ -1,4 +1,4 @@
-package com.myworktech.trendbar;
+package com.myworktech.trendbar.demo;
 
 import com.myworktech.trendbar.model.Quote;
 import com.myworktech.trendbar.model.Symbol;

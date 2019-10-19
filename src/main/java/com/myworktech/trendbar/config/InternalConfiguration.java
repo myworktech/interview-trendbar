@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @Profile("default")
 public class InternalConfiguration {
 
-
     @Bean(name = "handlersMap")
     public Map<QuoteHandlerType, QuoteHandlerService> handlersMap(List<QuoteHandlerType> quoteHandlerTypeList) {
         Map<QuoteHandlerType, QuoteHandlerService> handlers = new HashMap<>();
