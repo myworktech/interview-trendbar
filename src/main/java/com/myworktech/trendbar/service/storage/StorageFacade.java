@@ -28,7 +28,7 @@ public class StorageFacade {
                 .reduce(0, Integer::sum);
     }
 
-    public Set<CompletedTrendBar> buildReport(Symbol symbol, TrendBarType trendBarType, LocalDateTime from, LocalDateTime to) throws NoSuchTrendBarException {
+    public Set<CompletedTrendBar> buildHistory(Symbol symbol, TrendBarType trendBarType, LocalDateTime from, LocalDateTime to) throws NoSuchTrendBarException {
         QuoteHandlerType typeToSearch = QuoteHandlerType.getInstance(symbol, trendBarType);
         CompletedTrendBarStorage storage = list
                 .stream()
