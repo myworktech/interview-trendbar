@@ -43,7 +43,7 @@ public class TrendBarServiceTest {
     private TrendBarHistoryService trendBarHistoryService;
 
     @Test
-    public void test1() throws Throwable {
+    public void demoTest() throws Throwable {
         int SUPER_TOTAL_CYCLE_COUNT = TOTAL_CYCLE_COUNT * quoteHandlerTypeList.size();
         final CountDownLatch countDownLatch = new CountDownLatch(SUPER_TOTAL_CYCLE_COUNT);
 
@@ -78,6 +78,6 @@ public class TrendBarServiceTest {
 
         Set<CompletedTrendBar> historySet = trendBarHistoryService.buildTrendBarsHistory(Symbol.getInstance("USDRUB"), TrendBarType.S1, LocalDateTime.now().minusHours(1L));
 
-        System.out.println(historySet.toString());
+        log.info(historySet.toString());
     }
 }
