@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class DemoTestHandlersConfiguration {
         list.add(QuoteHandlerType.getInstance(Symbol.getInstance("USDRUB"), TrendBarType.M1));
         list.add(QuoteHandlerType.getInstance(Symbol.getInstance("USDRUB"), TrendBarType.S1));
 
-        return list;
+        return Collections.unmodifiableList(list);
     }
 
     @Bean(name = "quoteProviderList")
@@ -39,7 +40,7 @@ public class DemoTestHandlersConfiguration {
                 .map(QuoteHandlerType::getSymbol)
                 .distinct()
                 .map(DemoQuoteProvider::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
     }
 
 }

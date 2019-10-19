@@ -5,19 +5,13 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 @ToString
 public class QuoteHandlerType {
 
-    private static final ConcurrentMap<QuoteHandlerType, Object> instances = new ConcurrentHashMap<>();
-    private static final Object PRESENT = new Object();
-
-    static {
-//        instances.add(QuoteHandlerType.getInstance(Symbol.getInstance("USDEUR"), TrendBarType.S1));
-    }
+    private static final ConcurrentMap<String, QuoteHandlerType> instances = new ConcurrentHashMap<>();
 
     @Getter
     private final Symbol symbol;
@@ -30,16 +24,16 @@ public class QuoteHandlerType {
     }
 
     public static QuoteHandlerType getInstance(Symbol symbol, TrendBarType trendBarType) {
-        Optional<QuoteHandlerType> quoteHandlerType = instances.keySet().stream().filter(q -> q.getSymbol() == symbol && q.getTrendBarType().equals(trendBarType)).findFirst();
-        if (quoteHandlerType.isPresent())
-            return quoteHandlerType.get();
-
+        String key = symbol.toString() + trendBarType.name();
+        QuoteHandlerType quoteHandlerType = instances.get(key);
+        if (quoteHandlerType != null)
+            return quoteHandlerType;
 
         QuoteHandlerType newValue = new QuoteHandlerType(symbol, trendBarType);
 
-        Object instance = instances.putIfAbsent(newValue, PRESENT);
+        QuoteHandlerType instance = instances.putIfAbsent(key, newValue);
 
-        return instance == null ? newValue : quoteHandlerType.get();
+        return instance == null ? newValue : instance;
     }
 
     @Override

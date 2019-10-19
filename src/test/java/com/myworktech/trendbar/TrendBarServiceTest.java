@@ -46,9 +46,7 @@ public class TrendBarServiceTest {
             Thread thread = new Thread(() -> {
                 for (int j = 0; j < CYCLE_COUNT_PER_THREAD; j++) {
                     for (QuoteProvider quoteProvider : quoteProviderList) {
-
                         Quote q = quoteProvider.getQuote();
-
                         trendBarService.addQuote(q, countDownLatch::countDown);
                         try {
                             Thread.sleep(random.nextInt(DELAY_MILLIS));

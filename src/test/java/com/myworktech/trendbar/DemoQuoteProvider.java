@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DemoQuoteProvider implements QuoteProvider {
 
     private final Symbol symbol;
-    private AtomicReference<Long> priceCounter = new AtomicReference<>(null);
+    private AtomicReference<Long> priceCounter = new AtomicReference<>(0L);
 
     public DemoQuoteProvider(Symbol symbol) {
         this.symbol = symbol;
@@ -26,10 +26,8 @@ public class DemoQuoteProvider implements QuoteProvider {
         Long newValue;
         do {
             oldValue = priceCounter.get();
-            newValue = oldValue == null ? 1L : oldValue + 1;
+            newValue = oldValue + 1;
         } while (!priceCounter.compareAndSet(oldValue, newValue));
         return newValue;
     }
-
-
 }
