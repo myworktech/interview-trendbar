@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CurrentTrendBarTest {
@@ -52,6 +53,8 @@ public class CurrentTrendBarTest {
         final long lowPrice = 2L;
         final long highPrice = 50L;
 
+        final CountDownLatch countDownLatch = new CountDownLatch(TOTAL_CYCLE_COUNT);
+
         Symbol symbol = Symbol.getInstance("RUBUSD");
 
         LocalDateTime openTimeStamp = LocalDateTime.of(2019, 10, 1, 10, 10, 10);
@@ -72,22 +75,17 @@ public class CurrentTrendBarTest {
                     long nextRandomPrice = ThreadLocalRandom.current().nextLong(highPrice - lowPrice - 1) + lowPrice + 1;
                     LocalDateTime nextRandomTimeStamp = openTimeStamp.plusSeconds(ThreadLocalRandom.current().nextLong(20) + 1);
                     currentTrendBar.addQuote(new Quote(symbol, nextRandomPrice, nextRandomTimeStamp));
+                    countDownLatch.countDown();
                     try {
                         Thread.sleep(DELAY_MILLIS);
                     } catch (InterruptedException ignored) {
                     }
                 }
-                synchronized (CurrentTrendBarTest.this) {
-                    notifyAll();
-                }
             });
             thread.start();
         }
 
-        // An alternative to the CountDownLatch approach.
-        synchronized (CurrentTrendBarTest.this) {
-            wait();
-        }
+        countDownLatch.await();
 
         final int EXPLICITLY_ADDED_QUOTES = 4;
 
