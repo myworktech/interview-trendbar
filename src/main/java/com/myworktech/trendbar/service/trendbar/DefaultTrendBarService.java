@@ -10,6 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * In this implementation, there is a separate handler service for each combination of a symbol and TB period type.
+ * Every such service accumulates quotes to a 'current' TB.
+ * When it comes time to complete a TB, the service saves it to the attached storage (intended to store only single combination
+ * of a symbol and TB period type as well) and creates a new current TB to receive new quotes
+ */
 @Service
 public class DefaultTrendBarService implements TrendBarService {
 
