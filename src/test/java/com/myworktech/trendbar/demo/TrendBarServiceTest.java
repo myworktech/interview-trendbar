@@ -76,8 +76,13 @@ public class TrendBarServiceTest {
             Assert.assertNotNull(e);
         }
 
-        Set<CompletedTrendBar> historySet = trendBarHistoryService.buildTrendBarsHistory(Symbol.getInstance("USDRUB"), TrendBarType.S1, LocalDateTime.now().minusHours(1L));
+        for (QuoteHandlerType quoteHandlerType : quoteHandlerTypeList) {
+            Set<CompletedTrendBar> historySet = trendBarHistoryService.buildTrendBarsHistory(quoteHandlerType.getSymbol(), quoteHandlerType.getTrendBarType(), LocalDateTime.now().minusHours(1L));
+            log.info("Total history for TBs of type " + quoteHandlerType + prettifySetForPrint(historySet));
+        }
+    }
 
-        log.info(historySet.toString());
+    private String prettifySetForPrint(Set<CompletedTrendBar> historySet) {
+        return historySet.toString().replaceAll("\\[", "").replaceAll("]", "");
     }
 }

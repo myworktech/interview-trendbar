@@ -30,11 +30,10 @@ public class CompletedTrendBar {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("CompletedTrendBar{");
+        final StringBuilder sb = new StringBuilder("\nCompletedTrendBar{");
         sb.append("lowPrice=").append(lowPrice);
         sb.append(", highPrice=").append(highPrice);
         sb.append(", quotesCount=").append(quotesCount);
-        sb.append(", hashCode=").append(Integer.toHexString(hashCode()));
         sb.append('}');
         return sb.toString();
     }
