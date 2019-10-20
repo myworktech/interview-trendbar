@@ -68,14 +68,14 @@ public class DefaultQuoteHandlerService implements QuoteHandlerService {
                     synchronized (DefaultQuoteHandlerService.this) {
                         if (currentTrendBar == null) {
                             currentTrendBar = new CurrentTrendBar(trendBarType, quote);
-                        } else {
-                            currentTrendBar.addQuote(quote);
+                            return;
                         }
                     }
-                else if (checkIfPeriodIsOver(quote, currentTrendBar.getLastQuote())) {
+
+                if (checkIfPeriodIsOver(quote, currentTrendBar.getLastQuote())) {
                     CurrentTrendBar old = currentTrendBar;
                     synchronized (DefaultQuoteHandlerService.this) {
-                        if (old == currentTrendBar) {
+                        if (checkIfPeriodIsOver(quote, currentTrendBar.getLastQuote())) {
                             storage.add(new CompletedTrendBar(currentTrendBar));
                             currentTrendBar = new CurrentTrendBar(trendBarType, quote);
                         } else

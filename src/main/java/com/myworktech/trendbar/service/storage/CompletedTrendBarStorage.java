@@ -25,7 +25,7 @@ public class CompletedTrendBarStorage {
 
     public void add(CompletedTrendBar completedTrendBar) {
         list.add(completedTrendBar);
-        log.info("Storage for " + quoteHandlerType.toString() + " has saved a quote: " + completedTrendBar.getLowPrice() + " " + completedTrendBar.getHighPrice());
+        log.info("Storage for " + quoteHandlerType.toString() + " has saved a TB: " + completedTrendBar.getLowPrice() + " " + completedTrendBar.getHighPrice());
     }
 
     public CompletedTrendBar[] getAllStoredItems() {
